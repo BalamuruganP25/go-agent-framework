@@ -4,11 +4,12 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/BalamuruganP25/go-agent-framework/internal/handler"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
 
-func NewRouter() http.Handler {
+func NewRouter(chatHandler *handler.ChatHandler) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.RequestID)
@@ -18,6 +19,7 @@ func NewRouter() http.Handler {
 	r.Use(middleware.Compress(5))
 
 	r.Get("/health", health)
+	r.Post("/api/v1/chat", chatHandler.Chat)
 
 	return r
 }

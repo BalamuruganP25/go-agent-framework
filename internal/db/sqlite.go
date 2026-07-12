@@ -2,7 +2,7 @@ package db
 
 import (
 	"github.com/BalamuruganP25/go-agent-framework/internal/models"
-	"gorm.io/driver/sqlite"
+	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
 
