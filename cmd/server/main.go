@@ -54,7 +54,11 @@ func main() {
 	toolRegistry.Register(
 		tools.NewCalculatorTool(),
 	)
-	planner := agent.NewKeywordPlanner()
+
+	planner := agent.NewFallbackPlanner(
+		agent.NewPhi3Planner(llmClient),
+		agent.NewKeywordPlanner(),
+	)
 
 	executor := agent.NewExecutor(
 		toolRegistry,
