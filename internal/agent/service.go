@@ -6,20 +6,27 @@ import (
 	"github.com/BalamuruganP25/go-agent-framework/internal/llm"
 	"github.com/BalamuruganP25/go-agent-framework/internal/models"
 	"github.com/BalamuruganP25/go-agent-framework/internal/repository"
+	"github.com/BalamuruganP25/go-agent-framework/internal/tools"
 )
 
 type Service struct {
 	llm      llm.Client
 	messages repository.MessageRepository
+	tools    *tools.Registry
+	planner  Planner
 }
 
 func New(
 	llmClient llm.Client,
 	messageRepo repository.MessageRepository,
+	tools *tools.Registry,
+	planner Planner,
 ) *Service {
 	return &Service{
 		llm:      llmClient,
 		messages: messageRepo,
+		tools:    tools,
+		planner:  planner,
 	}
 }
 
@@ -28,6 +35,26 @@ func (s *Service) Chat(
 	sessionID string,
 	message string,
 ) (string, error) {
+
+	plan, err := s.planner.Plan(
+		ctx,
+		message,
+	)
+	if err != nil {
+		return "", err
+	}
+
+	if plan != nil {
+		tool, ok := s.tools.Get(
+			plan.ToolName,
+		)
+		if ok {
+			return tool.Execute(
+				ctx,
+				plan.Input,
+			)
+		}
+	}
 
 	history, err := s.messages.
 		GetBySession(ctx, sessionID)

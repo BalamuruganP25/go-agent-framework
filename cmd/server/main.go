@@ -14,6 +14,7 @@ import (
 	"github.com/BalamuruganP25/go-agent-framework/internal/llm"
 	"github.com/BalamuruganP25/go-agent-framework/internal/models"
 	"github.com/BalamuruganP25/go-agent-framework/internal/repository"
+	"github.com/BalamuruganP25/go-agent-framework/internal/tools"
 )
 
 func main() {
@@ -44,9 +45,18 @@ func main() {
 
 	messageRepo := repository.NewMessageRepository(database)
 
+	toolRegistry := tools.NewRegistry()
+
+	toolRegistry.Register(
+		tools.NewTimeTool(),
+	)
+	planner := agent.NewKeywordPlanner()
+
 	agentService := agent.New(
 		llmClient,
 		messageRepo,
+		toolRegistry,
+		planner,
 	)
 
 	chatHandler := handler.NewChatHandler(agentService)
