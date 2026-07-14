@@ -3,6 +3,7 @@ package agent
 import (
 	"context"
 	"fmt"
+	"log"
 
 	"github.com/BalamuruganP25/go-agent-framework/internal/tools"
 )
@@ -35,6 +36,11 @@ func (e *Executor) Execute(
 			)
 	}
 
+	log.Printf(
+		"Executing tool: %s input: %s",
+		plan.ToolName,
+		plan.Input,
+	)
 	return tool.Execute(
 		ctx,
 		plan.Input,

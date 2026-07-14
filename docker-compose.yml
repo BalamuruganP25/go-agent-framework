@@ -4,6 +4,8 @@ services:
     container_name: go-agent-framework
     ports:
       - "8084:8084"
+    volumes:
+      - .:/workspace
     environment:
       PORT: 8084
       OLLAMA_URL: http://ollama:11434
