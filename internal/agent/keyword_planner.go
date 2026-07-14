@@ -24,5 +24,20 @@ func (p *KeywordPlanner) Plan(
 		}, nil
 	}
 
+	if strings.Contains(
+		message,
+		"calculate",
+	) {
+		return &Plan{
+			ToolName: "calculator",
+			Input: strings.TrimSpace(
+				strings.TrimPrefix(
+					message,
+					"calculate",
+				),
+			),
+		}, nil
+	}
+
 	return nil, nil
 }

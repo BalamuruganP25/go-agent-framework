@@ -50,13 +50,21 @@ func main() {
 	toolRegistry.Register(
 		tools.NewTimeTool(),
 	)
+
+	toolRegistry.Register(
+		tools.NewCalculatorTool(),
+	)
 	planner := agent.NewKeywordPlanner()
+
+	executor := agent.NewExecutor(
+		toolRegistry,
+	)
 
 	agentService := agent.New(
 		llmClient,
 		messageRepo,
-		toolRegistry,
 		planner,
+		executor,
 	)
 
 	chatHandler := handler.NewChatHandler(agentService)
